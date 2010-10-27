@@ -15,14 +15,8 @@ org	7C00h
 	mov	dh, ch
 	mov	bx, buffer
 	int	13h
+	jc	_error
 
-	jnc	_not_error
-	mov	bl, 4
-	mov	bp, error
-	mov	cx, buffer - error
-	jmp	_write
-
-_not_error:
 	mov	al, 0
 	mov	cx, 512
 	mov	di, buffer
@@ -31,8 +25,13 @@ _not_error:
 	neg	cx
 	add	cx, 511
 
-	mov	bl, 2
+	mov	bl, 02
 	mov	bp, buffer
+	jmp	_write
+_error:
+	mov	bl, 04
+	mov	bp, error
+	mov	cx, buffer - error
 _write:
 	mov	ax, 1301h
 	mov	bh, 0

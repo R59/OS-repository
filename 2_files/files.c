@@ -11,8 +11,8 @@ struct massiv
 int proga(int argc, char **argv, struct massiv *X);
 int read_files(int files_count, char **files, struct massiv *X);
 int read(FILE *file, struct massiv *X);
-void show_error(unsigned int error);
 void sort(struct massiv *X);
+void show_error(unsigned int error);
 
 int main(int argc, char **argv)
 {
