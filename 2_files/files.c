@@ -17,16 +17,20 @@ void show_error(unsigned int error);
 int main(int argc, char **argv)
 {
 	int err = 0;
-	struct massiv A = {0, STARTSIZE, (int *)malloc(STARTSIZE*sizeof(int))};
+	struct massiv A = {0, STARTSIZE, NULL};
 
 	if(argc<3)
 		err = 1;
-	else if(A.data == NULL)
-		err = 2;
 	else
 	{
-		err = proga(argc, argv, &A);
-		free(A.data);
+		A.data = (int *)malloc(STARTSIZE*sizeof(int));
+		if(A.data == NULL)
+			err = 2;
+		else
+		{
+			err = proga(argc, argv, &A);
+			free(A.data);
+		}
 	}
 
 	if(err)
@@ -119,7 +123,7 @@ void show_error(unsigned int error)
 	char *message[] = {
 						"Unknown error",
 						"Too few parameters",
-						"Not anough memory",
+						"Not enough memory",
 						"Can't open output file",
 						"Can't open input file",
 						"Can't close input file",

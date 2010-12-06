@@ -29,23 +29,21 @@
 	mov	ax, 8*2
 	mov	ss, ax
 	jmp	8:@f
-@@:	sti
-
-;	int	13		; (1)
-
-;	mov	ax, 8		; (2)
-;	mov	ds, ax		;
-
-;	jmp	0x1000:0	; (3)
-
-	mov	cx, str_ok_len
-	mov	si, str_ok
-	call	print_string
-	cli
+@@:
+	mov	al, 00010011b	; ICW1
+	out	20h, al
+	mov	al, 00001000b	; ICW2
+	out	21h, al
+	mov	al, 00000001b	; ICW4
+	out	21h, al
+	mov	al, 11111101b	; disable mask
+	out	21h, al
+	sti
+main:
 	hlt
+;	int	13		; (1)
+	jmp	main
 
-str_ok	db	'OK'
-str_ok_len = $ - str_ok
 
 str_err	db	'Error'
 str_err_len = $ - str_err
@@ -73,6 +71,29 @@ int_all:
 	pop	cx
 	iret
 
+str_9	db	'Hello, INT9!'
+str_9_len = $ - str_9
+int_9:
+	push	ax
+	in	al, 60h
+	;in	al, 61h
+	;or	al, 10000000b
+	;out	61h, al
+	;and	al, 01111111b
+	;out	61h, al
+	mov	al, 20h
+	out	20h, al
+	pop	ax
+
+	push	cx
+	push	si
+	mov	cx, str_9_len
+	mov	si, str_9
+	call	print_string
+	pop	si
+	pop	cx
+	iret
+
 str_13	db	'Hello, INT13!'
 str_13_len = $ - str_13
 int_13:
@@ -82,21 +103,10 @@ int_13:
 	mov	si, str_13
 	call	print_string
 	pop	si
-
-;	push	bp		; (2) (3)
-;	mov	bp, sp		; (2) (3)
-;	add	bp, 2+2+2	; (2) (3)
-;	mov	cx, [bp]	; (2) (3)
-;	add	cx, 2		; (2)
-;	add	cx, 5		;     (3)
-;	mov	[bp], cx	; (2) (3)
-;	pop	bp		; (2) (3)
-
 	pop	cx
-;	add	sp, 2		; (2) (3)
-	iret
-;	cli
-;	hlt
+;	iret			; (1)
+	cli
+	hlt
 
 pos	dw	0
 print_string:
@@ -148,7 +158,17 @@ buffer:
 
 ; - - - - - - - - - - sectors 2, 3, 4, 5 - - - - - - - - - -
 IDT:
-	repeat 13
+	repeat 9
+		dw	int_all, 8
+		db	0, 10000110b
+		dw	0
+	end repeat
+
+	dw	int_9, 8
+	db	0, 10000110b
+	dw	0
+
+	repeat 13 - (9+1)
 		dw	int_all, 8
 		db	0, 10000110b
 		dw	0
