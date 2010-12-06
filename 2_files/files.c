@@ -17,12 +17,12 @@ void show_error(unsigned int error);
 int main(int argc, char **argv)
 {
 	int err = 0;
-	struct massiv A = {0, STARTSIZE, NULL};
 
 	if(argc<3)
 		err = 1;
 	else
 	{
+		struct massiv A = {0, STARTSIZE, NULL};
 		A.data = (int *)malloc(STARTSIZE*sizeof(int));
 		if(A.data == NULL)
 			err = 2;
