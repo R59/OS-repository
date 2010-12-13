@@ -1,12 +1,14 @@
 org	7C00h
 
 ; - - - - - - - - - - sector 1 - - - - - - - - - -
+
 	cli
 	xor	sp, sp
 	mov	ss, sp
 	sti
 
 	mov	es, sp
+	cld
 	jmp	0:$+5
 
 

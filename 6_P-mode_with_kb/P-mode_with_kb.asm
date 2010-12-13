@@ -1,4 +1,5 @@
 ; - - - - - - - - - - sector 1 - - - - - - - - - -
+
 	cli
 	xor	sp, sp
 	mov	ax, 07C0h
@@ -7,6 +8,7 @@
 
 	mov	ds, ax
 	mov	es, ax
+	cld
 	jmp	07C0h:@f
 @@:
 	mov	ax, 0204h
@@ -41,7 +43,7 @@
 	sti
 main:
 	hlt
-;	int	13		; (1)
+	int	55
 	jmp	main
 
 
@@ -104,7 +106,6 @@ int_13:
 	call	print_string
 	pop	si
 	pop	cx
-;	iret			; (1)
 	cli
 	hlt
 
@@ -146,17 +147,18 @@ IDTpointer:
 
 GDT:
 	db	8 dup(0x00)
-	db	0x00,0x20,  0x00,0x7C,0x00,  10011000b, 00000000b, 0x00		; code
-	db	0x00,0x20,  0x00,0x7C,0x00,  10010110b, 00000000b, 0x00		; stack
-	db	0x00,0x20,  0x00,0x7C,0x00,  10010010b, 00000000b, 0x00		; data
+	db	0x00,0x02,  0x00,0x7C,0x00,  10011000b, 00000000b, 0x00		; code
+	db	0x00,0x0A,  0x00,0x7C,0x00,  10010110b, 00000000b, 0x00		; stack
+	db	0x00,0x02,  0x00,0x7C,0x00,  10010010b, 00000000b, 0x00		; data
 	db	0x00,0x10,  0x00,0x80,0x0B,  10010010b, 00000000b, 0x00		; video
 GDTlen = $ - GDT
 
 buffer:
-	db	510 - ($ - $$) dup (0)
+	db	510 - ($ - $$) dup(0)
 	db	0x55, 0xAA
 
 ; - - - - - - - - - - sectors 2, 3, 4, 5 - - - - - - - - - -
+
 IDT:
 	repeat 9
 		dw	int_all, 8
