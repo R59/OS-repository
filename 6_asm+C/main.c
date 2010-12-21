@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 extern int sum(int, int);
 
 int main()

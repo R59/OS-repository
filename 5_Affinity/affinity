@@ -1,0 +1,12 @@
+#!/bin/bash
+
+xor=$1
+cpu=1
+pid=$(pidof -s test)
+
+while [[ $pid ]]
+do
+	(taskset -p $cpu $pid) > /dev/null
+#	cpu=$(($cpu^$xor))
+	pid=$(pidof -s test)
+done
