@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	else
 	{
 		struct massiv A = {0, STARTSIZE, NULL};
-		A.data = (int *)malloc(STARTSIZE*sizeof(int));
+		A.data = malloc(STARTSIZE*sizeof(int));
 		if(A.data == NULL)
 			err = 2;
 		else
@@ -92,7 +92,7 @@ int read(FILE *file, struct massiv *X)
 
 		if(X->nowsize == X->maxsize)
 		{
-			X->data = (int *)realloc(X->data, X->maxsize<<=1);
+			X->data = realloc(X->data, X->maxsize<<=1);
 			if(X->data == NULL)
 				return 2;
 		}
