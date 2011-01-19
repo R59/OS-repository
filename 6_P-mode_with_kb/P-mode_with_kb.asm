@@ -25,13 +25,14 @@
 	or	al, 1
 	mov	cr0, eax
 
+	jmp	8:@f
+@@:
 	xor	ax, ax
 	mov	ds, ax
 	mov	es, ax
 	mov	ax, 8*2
 	mov	ss, ax
-	jmp	8:@f
-@@:
+
 	mov	al, 00010011b	; ICW1
 	out	20h, al
 	mov	al, 00001000b	; ICW2
@@ -143,7 +144,6 @@ GDTpointer:
 IDTpointer:
 	dw	256*8
 	dd	7C00h + buffer
-
 
 GDT:
 	db	8 dup(0x00)
