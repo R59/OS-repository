@@ -2,11 +2,11 @@
 #include <time.h>
 #include <windows.h>
 
-#define CPU 1000000000
-#define N 1
-#define SIZE 2	// 1000
+#define CPU 2000000000
+#define maxDist 50
 
-int A[SIZE];
+char A[maxDist+1];
+int index2;
 
 DWORD_PTR findBit(DWORD_PTR mask, DWORD_PTR from);
 DWORD WINAPI inc_0();
@@ -15,6 +15,7 @@ DWORD WINAPI inc_1();
 int main()
 {
 	HANDLE threads[2];
+	DWORD_PTR mask[2];
 	void *func[] = {&inc_0, &inc_1};
 
 	DWORD_PTR procAffMask, sysAffMask;
@@ -24,41 +25,45 @@ int main()
 		return 1;
 	}
 
-	int i;
-	DWORD_PTR from = 1;
-	for(i=0; i<2; ++i)
+	mask[0] = findBit(procAffMask, 1);
+	mask[1] = findBit(procAffMask, mask[0]<<1);
+	if(!mask[0] || !mask[1])
 	{
-		threads[i] = CreateThread(NULL, 0, func[i], NULL, CREATE_SUSPENDED, NULL);
-		if(threads[i] == NULL)
-		{
-			puts("Error: create");
-			return 2;
-		}
-
-		DWORD_PTR mask = findBit(procAffMask, from);
-		if(!mask)
-		{
-			puts("Not enough logical processors");
-			return 3;
-		}
-
-		if( !SetThreadAffinityMask(threads[i], mask) )
-		{
-			puts("Error: set affinity");
-			return 4;
-		}
-		from = mask<<1;
+		puts("Not enough logical processors");
+		return 2;
 	}
 
-	ResumeThread(threads[0]);
-	ResumeThread(threads[1]);
-	time_t t1 = time(NULL);
-	WaitForMultipleObjects(2, threads, TRUE, INFINITE);
-	time_t t2 = time(NULL);
-	CloseHandle(threads[0]);
-	CloseHandle(threads[1]);
+	puts("Dist\tTime");
+	for(index2=0; index2<=maxDist; ++index2)
+	{
+		int i;
+		for(i=0; i<2; ++i)
+		{
+			threads[i] = CreateThread(NULL, 0, func[i], NULL, CREATE_SUSPENDED, NULL);
+			if(threads[i] == NULL)
+			{
+				puts("Error: create");
+				return 2;
+			}
 
-	printf("time: %d sec\n", (int)(t2-t1));
+			if( !SetThreadAffinityMask(threads[i], mask[i]) )
+			{
+				puts("Error: set affinity");
+				return 3;
+			}
+		}
+
+		ResumeThread(threads[0]);
+		ResumeThread(threads[1]);
+		time_t t1 = time(NULL);
+		WaitForMultipleObjects(2, threads, TRUE, INFINITE);
+		time_t t2 = time(NULL);
+		CloseHandle(threads[0]);
+		CloseHandle(threads[1]);
+
+		printf("%d\t%d\n", index2, (int)(t2-t1));
+	}
+
 	return 0;
 }
 
@@ -74,12 +79,7 @@ DWORD WINAPI inc_0()
 {
 	int i;
 	for(i=0; i<CPU; ++i)
-	{
-		A[0] = 0;
-		while(A[0]++<N)
-			;
-	}
-	puts("End 0");
+		++A[0];
 	return 0;
 }
 
@@ -87,11 +87,6 @@ DWORD WINAPI inc_1()
 {
 	int i;
 	for(i=0; i<CPU; ++i)
-	{
-		A[SIZE-1] = 0;
-		while(A[SIZE-1]++<N)
-			;
-	}
-	puts("End 1");
+		++A[index2];
 	return 0;
 }
