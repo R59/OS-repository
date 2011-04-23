@@ -27,11 +27,10 @@ else
 		then
 			if [[ -n ${Data[$file]} && ${Data[$file]} != "[$md5|$size]" ]];
 			then
-				echo $file
+				echo file: $file
 				echo -e "\texpected -> [$md5|$size]"
-				echo -e "\tin place -> ${Data["$file"]}\n"
+				echo -e "\tin place -> ${Data["$file"]}"
 			fi;
 		fi;
 	done;
 fi;
-
