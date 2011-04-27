@@ -39,3 +39,4 @@ void hello_signal(int number)
 	if(number==20)
 		EXIT=1;
 }
+

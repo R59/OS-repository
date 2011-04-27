@@ -2,7 +2,7 @@
 
 EXIT_SIGNAL=20	# Ctrl+Z (SIGTSTP)
 
-pid=$(pidof signals.out)
+pid=$(pidof signals_info.out)
 [[ -z $pid ]] && exit
 
 echo start
@@ -19,3 +19,4 @@ done
 echo sleep 1.5 second
 sleep 1.5
 kill -n $EXIT_SIGNAL $pid
+

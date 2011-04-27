@@ -1,0 +1,204 @@
+Hello, signal 1!
+	my pid = 4363
+	my guid = 0
+	signo = 1
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 2!
+	my pid = 4363
+	my guid = 0
+	signo = 2
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 3!
+	my pid = 4363
+	my guid = 0
+	signo = 3
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 4!
+	my pid = 4363
+	my guid = 0
+	signo = 4
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 5!
+	my pid = 4363
+	my guid = 0
+	signo = 5
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 6!
+	my pid = 4363
+	my guid = 0
+	signo = 6
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 7!
+	my pid = 4363
+	my guid = 0
+	signo = 7
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 8!
+	my pid = 4363
+	my guid = 0
+	signo = 8
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 10!
+	my pid = 4363
+	my guid = 0
+	signo = 10
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 11!
+	my pid = 4363
+	my guid = 0
+	signo = 11
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 12!
+	my pid = 4363
+	my guid = 0
+	signo = 12
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 13!
+	my pid = 4363
+	my guid = 0
+	signo = 13
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 14!
+	my pid = 4363
+	my guid = 0
+	signo = 14
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 15!
+	my pid = 4363
+	my guid = 0
+	signo = 15
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 16!
+	my pid = 4363
+	my guid = 0
+	signo = 16
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 17!
+	my pid = 4363
+	my guid = 0
+	signo = 17
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 18!
+	my pid = 4363
+	my guid = 0
+	signo = 18
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 21!
+	my pid = 4363
+	my guid = 0
+	signo = 21
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 22!
+	my pid = 4363
+	my guid = 0
+	signo = 22
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 23!
+	my pid = 4363
+	my guid = 0
+	signo = 23
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 24!
+	my pid = 4363
+	my guid = 0
+	signo = 24
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 25!
+	my pid = 4363
+	my guid = 0
+	signo = 25
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 26!
+	my pid = 4363
+	my guid = 0
+	signo = 26
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 27!
+	my pid = 4363
+	my guid = 0
+	signo = 27
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 28!
+	my pid = 4363
+	my guid = 0
+	signo = 28
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 29!
+	my pid = 4363
+	my guid = 0
+	signo = 29
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 30!
+	my pid = 4363
+	my guid = 0
+	signo = 30
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 31!
+	my pid = 4363
+	my guid = 0
+	signo = 31
+	code = 0
+	pid = 4368
+	uid = 0
+Hello, signal 20!
+	my pid = 4363
+	my guid = 0
+	signo = 20
+	code = 0
+	pid = 4368
+	uid = 0
+Exit
