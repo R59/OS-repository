@@ -36,7 +36,7 @@ void hello_signal(int number, siginfo_t *info, void *something)
 	if(EXIT)
 		return;
 	printf("Hello, signal %d!\n\tmy pid = %d\n\tmy guid = %d\n\tsigno = %d\n\tcode = %d\n\tpid = %d\n\tuid = %d\n", \
-						number, getpid(), getgid(), info->si_signo, info->si_code, info->si_pid, info->si_uid);
+				number, getpid(), getgid(), info->si_signo, info->si_code, info->si_pid, info->si_uid);
 	if(number==20)
 		EXIT=1;
 }
