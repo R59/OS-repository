@@ -39,7 +39,6 @@ int main()
 		}
 
 	int number;
-	extern int errno;
 	do
 	{
 		int readed = read(pair[0], &number, sizeof(number));
