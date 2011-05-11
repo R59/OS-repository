@@ -47,16 +47,14 @@ int main(int argc, char**argv)
 		}
 
 		char buf[BUFSIZE];
+		int readed;
 		for(int i=0; i<argc-1; ++i)
 			if(FD_ISSET(numbers[i], &set))
-			{
-				int readed = read(numbers[i], buf, BUFSIZE);
-				if(readed)
+				while( (readed=read(numbers[i],buf,BUFSIZE))>0 )
 				{
 					write(1, buf, readed);
 					puts("\n----------");
 				}
-			}
 	}
 
 	free(numbers);
