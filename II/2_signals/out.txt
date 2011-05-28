@@ -1,0 +1,264 @@
+my pid = 30089
+send signal 0
+send signal 1
+send signal 2
+send signal 3
+send signal 4
+send signal 5
+send signal 6
+send signal 7
+send signal 8
+send signal 10
+send signal 11
+send signal 12
+send signal 13
+send signal 14
+send signal 15
+send signal 16
+send signal 17
+send signal 18
+send signal 21
+send signal 22
+send signal 23
+send signal 24
+send signal 25
+send signal 26
+send signal 27
+send signal 28
+send signal 29
+send signal 30
+send signal 31
+send EXIT_SIGNAL(20)
+Hello, signal 1!
+        signo = 1
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 2!
+        signo = 2
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 3!
+        signo = 3
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 4!
+        signo = 4
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 5!
+        signo = 5
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 6!
+        signo = 6
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 7!
+        signo = 7
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 8!
+        signo = 8
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 10!
+        signo = 10
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 11!
+        signo = 11
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 12!
+        signo = 12
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 13!
+        signo = 13
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 14!
+        signo = 14
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 15!
+        signo = 15
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 16!
+        signo = 16
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 17!
+        signo = 17
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 18!
+        signo = 18
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 21!
+        signo = 21
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 22!
+        signo = 22
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 23!
+        signo = 23
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 24!
+        signo = 24
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 25!
+        signo = 25
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 26!
+        signo = 26
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 27!
+        signo = 27
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 28!
+        signo = 28
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 29!
+        signo = 29
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 30!
+        signo = 30
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 31!
+        signo = 31
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Hello, signal 20!
+        signo = 20
+        code = 0
+        my pid = 30089
+        my gid = 30088
+        sender pid = 30088
+        sender gid = 30088
+        sender uid = 20164
+Exit
