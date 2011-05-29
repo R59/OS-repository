@@ -15,6 +15,7 @@
 #include <pthread.h>
 
 #define SIZE 10
+#define MYPORT 12345
 
 /* ========  ========  ========  ========  ========  ========  ======== */
 
@@ -43,12 +44,19 @@ void change_life(char **cur, char **new);
 void *send_data(void *x);	// thread
 void printlog(char *msg);
 
-int main()
+
+int main()	// port9nka != good
 {
 	char **field = add_field();
+	if(field == NULL)
+	{
+		puts("Not enough memory for first block");
+		return 1;
+	}
 	for(int i=0; i<SIZE; ++i)
 		memcpy(field[i], startField[i], SIZE);
 	++lock[curField];
+
 
 	// Set handler for SIG_ALARM
 	struct sigaction S;
@@ -79,15 +87,17 @@ int main()
 	}
 
 
+	// Create server socket
 	int server = socket(PF_INET, SOCK_STREAM, 0);
 	if(server == -1)
 	{
 		puts("Error: socket");
 		return 10;
 	}
+
 	struct sockaddr_in s_addr;
 	s_addr.sin_family = AF_INET;
-	s_addr.sin_port = htons(12345);
+	s_addr.sin_port = htons(MYPORT);
 	s_addr.sin_addr.s_addr = INADDR_ANY;
 	if(bind(server, (struct sockaddr *)&s_addr, sizeof(s_addr)) == -1)
 	{
@@ -101,6 +111,8 @@ int main()
 		return 12;
 	}
 
+
+	// Wait client
 	int client;
 	do
 	{
@@ -134,6 +146,16 @@ int main()
 	}
 	while(client>=0);
 
+
+	// Close server socket
+	printlog("closing server socket");
+	if(shutdown(server, SHUT_RDWR) == -1)
+		printlog("Error: shutdown");
+	if(close(server) == -1)
+		printlog("Error: close");
+
+
+	// Free all data
 	free(lock);
 	for(int i=0; i<count; ++i)
 	{
@@ -142,12 +164,6 @@ int main()
 		free(fields[i]);
 	}
 	free(fields);
-
-	printlog("closing server socket");
-	if(shutdown(server, SHUT_RDWR) == -1)
-		printlog("Error: shutdown");
-	if(close(server) == -1)
-		printlog("Error: close");
 	return 0;
 }
 
