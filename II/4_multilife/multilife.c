@@ -39,8 +39,6 @@ void *send_data(void *x);
 void modify_data();
 void change_life(char **cur, char **new);
 
-static pthread_mutex_t mymutex = PTHREAD_MUTEX_INITIALIZER;
-
 int main()
 {
 	char **field = add_field();
@@ -192,9 +190,7 @@ void modify_data()
 	change_life(fields[curField], fields[next]);
 
 	--lock[curField];
-	pthread_mutex_lock(&mymutex);
 	curField = next;
-	pthread_mutex_unlock(&mymutex);
 	++lock[curField];
 	puts("ok");
 }
@@ -224,10 +220,8 @@ void change_life(char **cur, char **new)
 
 void *send_data(void *x)
 {
-	pthread_mutex_lock(&mymutex);
 	int cur = curField;
 	++lock[cur];
-	pthread_mutex_unlock(&mymutex);
 
 	//puts("sending data");
 	write(1, "sending data\n", sizeof("sending data"));
