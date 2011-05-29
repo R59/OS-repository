@@ -38,6 +38,7 @@ char **create_field();
 void *send_data(void *x);
 void modify_data();
 void change_life(char **cur, char **new);
+void printlog(char *msg);
 
 int main()
 {
@@ -97,35 +98,53 @@ int main()
 		return 12;
 	}
 
-	struct sockaddr_in his_addr;
-	socklen_t addr_len;
 	int client;
 	do
 	{
-		client = accept(server, (struct sockaddr *)&his_addr, &addr_len);
+		client = accept(server, NULL, NULL);
 		if(client>=0)
 		{
-			puts("client connected");
-			pthread_t x;
-			if(pthread_create(&x, NULL, send_data, (void *)client))
+			printlog("client connected");
+			int *attr = (int *)malloc(2*sizeof(int));
+			if(attr == NULL)
 			{
-				puts("Error: pthread");
+				printlog("Error: not enough memory for arguments = close client");
+				close(client);
+				continue;
+			}
+			attr[0] = client;
+			attr[1] = curField;
+			pthread_t x;
+			if(pthread_create(&x, NULL, send_data, (void *)attr))
+			{
+				printlog("Error: pthread");
 				close(client);
 			}
 		}
 		else if(client==-1 && errno!=EINTR)
 		{
-			puts("Error: accept");
+			printlog("Error: accept");
+			client = 0;
 		}
 		else
 			client = 0;
 	}
 	while(client>=0);
 
-	if(shutdown(client, SHUT_RDWR)==-1)
-		write(1,"Error: shutdown server\n",sizeof("Error: shutdown server"));
-	if(close(server)==-1)
-		puts("Error: close server");
+	free(lock);
+	for(int i=0; i<count; ++i)
+	{
+		for(int j=0; j<SIZE; ++j)
+			free(fields[i][j]);
+		free(fields[i]);
+	}
+	free(fields);
+
+	printlog("closing server");
+	if(shutdown(server, SHUT_RDWR) == -1)
+		printlog("Error: shutdown");
+	if(close(server) == -1)
+		printlog("Error: close");
 	return 0;
 }
 
@@ -179,7 +198,7 @@ void modify_data()
 	if(next==count)
 		if(add_field() == NULL)
 		{
-			puts("Not enought memory for next step = life stopped for 1 second");
+			printlog("Not enought memory for next step = life stopped for 1 second");
 			return;
 		}
 
@@ -190,8 +209,7 @@ void modify_data()
 	change_life(fields[curField], fields[next]);
 
 	--lock[curField];
-	curField = next;
-	++lock[curField];
+	++lock[curField=next];
 	puts("ok");
 }
 
@@ -220,32 +238,38 @@ void change_life(char **cur, char **new)
 
 void *send_data(void *x)
 {
-	int cur = curField;
+	int *attr = (int *)x;
+	int client = attr[0];
+	int cur = attr[1];
+	free(attr);
+
 	++lock[cur];
 
-	//puts("sending data");
-	write(1, "sending data\n", sizeof("sending data"));
-
+	printlog("sending this data:");
 	for(int i=0; i<SIZE; ++i)
 		puts(fields[cur][i]);
 
 	//for(int i=0; i<1000000000; ++i) // slow connection
 	//	;
 
-	int client = (int)x;
 	for(int i=0; i<SIZE; ++i)
 	{
 		write(client, fields[cur][i], SIZE);
 		write(client, "\r\n", 2);
 	}
 
-	//puts("closing connection");
-	write(1, "closing connection\n", sizeof("closing connection"));
-	if(shutdown(client, SHUT_RDWR)==-1)
-		write(1,"Error: shutdown client\n",sizeof("Error: shutdown client"));
-	if(close(client)==-1)
-		write(1,"Error: close client\n",sizeof("Error: close client"));
+	printlog("closing client connection");
+	if(shutdown(client, SHUT_RDWR) == -1)
+		printlog("Error: shutdown");
+	if(close(client) == -1)
+		printlog("Error: close");
 
 	--lock[cur];
 	return NULL;
+}
+
+void printlog(char *msg)
+{
+	write(1, msg, strlen(msg));
+	write(1, "\n", 1);
 }
