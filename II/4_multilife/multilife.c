@@ -16,6 +16,8 @@
 
 #define SIZE 10
 
+/* ========  ========  ========  ========  ========  ========  ======== */
+
 char startField[SIZE][SIZE+1] = {	"##########",
 									"#        #",
 									"#  *  *  #",
@@ -27,17 +29,18 @@ char startField[SIZE][SIZE+1] = {	"##########",
 									"#        #",
 									"##########"	};
 
-
 int curField = 0;
 int count = 0;
 char ***fields = NULL;
 int *lock = NULL;
 
+/* ========  ========  ========  ========  ========  ========  ======== */
+
 char **add_field();
 char **create_field();
-void *send_data(void *x);
-void modify_data();
+void modify_data();	// SIGALRM
 void change_life(char **cur, char **new);
+void *send_data(void *x);	// thread
 void printlog(char *msg);
 
 int main()
@@ -140,7 +143,7 @@ int main()
 	}
 	free(fields);
 
-	printlog("closing server");
+	printlog("closing server socket");
 	if(shutdown(server, SHUT_RDWR) == -1)
 		printlog("Error: shutdown");
 	if(close(server) == -1)
@@ -148,6 +151,29 @@ int main()
 	return 0;
 }
 
+/* ========  ========  ========  ========  ========  ========  ======== */
+/* ========  ========  ========  ========  ========  ========  ======== */
+
+char **add_field()
+{
+	void *tmp = realloc(lock, (count+1)*sizeof(int));
+	if(tmp == NULL)
+		return NULL;
+	lock = (int *)tmp;
+
+	tmp = realloc(fields, (count+1)*sizeof(char **));
+	if(tmp == NULL)
+		return NULL;
+	fields = (char ***)tmp;
+
+	lock[count] = 0;
+	fields[count] = create_field();
+	if(fields[count] == NULL)
+		return NULL;
+
+	return fields[count++];
+}
+/* ========  ========  ========  ========  ========  ========  ======== */
 char **create_field()
 {
 	char **field = (char **)malloc(SIZE*sizeof(char *));
@@ -169,56 +195,40 @@ char **create_field()
 	return field;
 }
 
-char **add_field()
+/* ========  ========  ========  ========  ========  ========  ======== */
+/* ========  ========  ========  ========  ========  ========  ======== */
+
+void modify_data()	// SIGALRM
 {
-	void *tmp = realloc(lock, (count+1)*sizeof(int));
-	if(tmp == NULL)
-		return NULL;
-	lock = (int *)tmp;
-	lock[count] = 0;
+	// find free block
+	int next = 0;
+	while(next<count && lock[next])
+		++next;
 
-	tmp = realloc(fields, (count+1)*sizeof(char **));
-	if(tmp == NULL)
-		return NULL;
-	fields = (char ***)tmp;
-
-	fields[count] = create_field();
-	if(fields[count] == NULL)
-		return NULL;
-
-	return fields[count++];
-}
-
-void modify_data()
-{
-	int next;
-	for(next=0; next<count; ++next)
-		if(!lock[next])
-			break;
-	if(next==count)
-		if(add_field() == NULL)
-		{
-			printlog("Not enought memory for next step = life stopped for 1 second");
-			return;
-		}
+	if(next==count && add_field()==NULL)
+	{
+		printlog("Not enought memory for next step = life stopped for 1 second");
+		return;
+	}
 
 	//printf("[next=%d curField=%d count=%d]\n", next, curField, count);
 	//for(int i=0; i<SIZE; ++i)
-	//	puts(fields[curField][i]);
+	//	printlog(fields[curField][i]);
 
 	change_life(fields[curField], fields[next]);
 
 	--lock[curField];
 	++lock[curField=next];
-	puts("ok");
+	printlog("life");
 }
-
+/* ========  ========  ========  ========  ========  ========  ======== */
 void change_life(char **cur, char **new)
 {
-	memcpy(new[0],cur[0], SIZE);
-	memcpy(new[SIZE-1],cur[SIZE-1], SIZE);
-	for(int i=0; i<SIZE; ++i)
-		new[i][0] = new[i][SIZE-1] = '#';
+	memcpy(new[0],cur[0], SIZE);			// life border
+	memcpy(new[SIZE-1],cur[SIZE-1], SIZE);	// life border
+	for(int i=0; i<SIZE; ++i)				// life border
+		new[i][0] = new[i][SIZE-1] = '#';	// life border
+
 	for(int i=1; i<SIZE-1; ++i)
 		for(int j=1; j<SIZE-1; ++j)
 		{
@@ -231,12 +241,14 @@ void change_life(char **cur, char **new)
 			if(cur[i+1][j-1] == '*')	++x;
 			if(cur[i+1][ j ] == '*')	++x;
 			if(cur[i+1][j+1] == '*')	++x;
-
 			new[i][j] = (x>=3 && x<=4 ? '*' : ' ');
 		}
 }
 
-void *send_data(void *x)
+/* ========  ========  ========  ========  ========  ========  ======== */
+/* ========  ========  ========  ========  ========  ========  ======== */
+
+void *send_data(void *x)	// thread
 {
 	int *attr = (int *)x;
 	int client = attr[0];
@@ -247,18 +259,18 @@ void *send_data(void *x)
 
 	printlog("sending this data:");
 	for(int i=0; i<SIZE; ++i)
-		puts(fields[cur][i]);
+		printlog(fields[cur][i]);
 
-	//for(int i=0; i<1000000000; ++i) // slow connection
+	//for(int i=0; i<1000000000; ++i)	// slow connection
 	//	;
 
 	for(int i=0; i<SIZE; ++i)
 	{
-		write(client, fields[cur][i], SIZE);
-		write(client, "\r\n", 2);
+		write(client, fields[cur][i], SIZE);	// need check error
+		write(client, "\r\n", 2);				// need check error
 	}
 
-	printlog("closing client connection");
+	printlog("closing client socket");
 	if(shutdown(client, SHUT_RDWR) == -1)
 		printlog("Error: shutdown");
 	if(close(client) == -1)
@@ -268,8 +280,11 @@ void *send_data(void *x)
 	return NULL;
 }
 
+/* ========  ========  ========  ========  ========  ========  ======== */
+/* ========  ========  ========  ========  ========  ========  ======== */
+
 void printlog(char *msg)
 {
-	write(1, msg, strlen(msg));
-	write(1, "\n", 1);
+	write(1, msg, strlen(msg));	// need check error
+	write(1, "\n", 1);			// need check error
 }
