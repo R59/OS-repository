@@ -35,6 +35,8 @@ int count = 0;
 char ***fields = NULL;
 int *lock = NULL;
 
+static pthread_mutex_t mymutex = PTHREAD_MUTEX_INITIALIZER;
+
 /* ========  ========  ========  ========  ========  ========  ======== */
 
 char **add_field();
@@ -44,6 +46,7 @@ void change_life(char **cur, char **new);
 void *send_data(void *x);	// thread
 void printlog(char *msg);
 
+/* ========  ========  ========  ========  ========  ========  ======== */
 
 int main()	// port9nka != good
 {
@@ -233,8 +236,10 @@ void modify_data()	// SIGALRM
 
 	change_life(fields[curField], fields[next]);
 
+	pthread_mutex_lock(&mymutex);
 	--lock[curField];
 	++lock[curField=next];
+	pthread_mutex_unlock(&mymutex);
 	printlog("life");
 }
 /* ========  ========  ========  ========  ========  ========  ======== */
@@ -271,7 +276,9 @@ void *send_data(void *x)	// thread
 	int cur = attr[1];
 	free(attr);
 
+	pthread_mutex_lock(&mymutex);
 	++lock[cur];
+	pthread_mutex_unlock(&mymutex);
 
 	printlog("sending this data:");
 	for(int i=0; i<SIZE; ++i)
@@ -292,7 +299,9 @@ void *send_data(void *x)	// thread
 	if(close(client) == -1)
 		printlog("Error: close");
 
+	pthread_mutex_lock(&mymutex);
 	--lock[cur];
+	pthread_mutex_unlock(&mymutex);
 	return NULL;
 }
 
