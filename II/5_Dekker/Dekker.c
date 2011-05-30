@@ -1,7 +1,10 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <pthread.h>
 #include <string.h>
 #include <unistd.h>
+#include <sched.h>
 
 #define BIG_NUMBER 10000000
 
@@ -10,22 +13,36 @@
 volatile int want[2] = {0, 0};
 volatile int turn = 0;
 
-volatile int inside[2] = {0, 0};
 volatile int counter = 0;
 
 void *work(void *x);
-void shared_section(int name);
-void printlog(char *msg);
 
 int main()
 {
 	pthread_t threads[2];
-	pthread_create(&threads[0], NULL, work, (void *)0);
-	pthread_create(&threads[1], NULL, work, (void *)1);
+	for(int i=0; i<2; ++i)
+	{
+		if(pthread_create(&threads[i], NULL, work, (void *)i))
+		{
+			printf("Can't create thread %d", i);
+			return 1;
+		}
+		
+		cpu_set_t mask;
+		CPU_ZERO(&mask);
+		CPU_SET(i, &mask);
+		if(pthread_setaffinity_np(threads[i], sizeof(mask), &mask))
+		{
+			printf("Can't set affinity cpu=%d\n", i);
+			return 2;
+		}
+	}
 
-	while(counter<100)
-		;
+	for(int i=0; i<2; ++i)
+		if(pthread_join(threads[i], NULL))
+			printf("Error: join %d\n", i);
 
+	printf("counter = %d\n", counter);
 	return 0;
 }
 
@@ -33,54 +50,23 @@ void *work(void *x)
 {
 	int me = (int)x;
 
-	while(1)
+	for(int i=0; i<BIG_NUMBER; ++i)
 	{
-		mfence
 		want[me] = 1;
 		mfence
 		while(want[me^1])
 		{
-			mfence
 			if(turn != me)
 			{
-				mfence
 				want[me] = 0;
-				mfence
 				while(turn != me)
 					;
-				mfence
 				want[me] = 1;
-				mfence
 			}
 		}
 
-		shared_section(me);
-		mfence
+		++counter;
 		want[me] = 0;
-		mfence
 		turn = me^1;
-		mfence
 	}
-}
-
-void shared_section(int name)
-{
-	inside[name] = 1;
-	char s[] = "0";
-	s[0] += name;
-	printlog(s);
-	if(inside[name^1])
-		printlog("Hey, look! Somebody there!\n");
-
-	++counter;
-	for(int i=0; i<BIG_NUMBER; ++i)
-		;
-
-	inside[name] = 0;
-}
-
-void printlog(char *msg)
-{
-	write(1, msg, strlen(msg));	// need check error
-	write(1, "\n", 1);			// need check error
 }
